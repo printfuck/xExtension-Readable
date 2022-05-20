@@ -1,6 +1,11 @@
 <?php
 
 class ReadabilityExtension extends Minz_Extension {
+    
+    const regex = [
+		'#^https?://.*washingtonpost.com/#i',
+		'#^https?://.*heise.de/#i'
+	];
 
     public function init() {
         $this->registerTranslates();
@@ -12,6 +17,17 @@ class ReadabilityExtension extends Minz_Extension {
 
     public function fetchStuff($entry) {
 	
+	$read = false;
+			
+	foreach ( $regex as $ex ) {
+			if ( preg_match($ex, $entry->link()) === 1 ) {
+					$read = true;
+			}
+	}
+	if (! $read){
+		return $entry;
+	}
+			
 	$data = "{\"url\": \"" . $entry->link() ."\"}";
 	$headers[] = 'Content-Type: application/json';
 
