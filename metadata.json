@@ -1,7 +1,7 @@
 {
-	"name": "Reddit Image",
-	"author": "Alexis Degrugillier",
-	"description": "Modify reddit entries by displaying known medias and easing access to the linked resource",
+	"name": "Readability Enhance",
+	"author": "printfuck",
+	"description": "fetch article content for every feed with readability",
 	"version": "0.7.1",
 	"entrypoint": "RedditImage",
 	"type": "user"
