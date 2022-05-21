@@ -2,15 +2,11 @@
 
 class ReadabilityExtension extends Minz_Extension {
     
-    const regex = [
-		'#^https?://.*washingtonpost.com/#i',
-		'#^https?://.*heise.de/#i'
-	];
 
     public function init() {
-        $this->registerTranslates();
+        #$this->registerTranslates();
 
-        $current_user = Minz_Session::param('currentUser');
+        #$current_user = Minz_Session::param('currentUser');
 
         $this->registerHook('entry_before_insert', array($this, 'fetchStuff'));
     }
@@ -19,15 +15,23 @@ class ReadabilityExtension extends Minz_Extension {
 	
 	$read = false;
 			
+    	$regex = [
+		'washingtonpost.com',
+		'heise.de',
+		'nytimes.com'
+	];
+
 	foreach ( $regex as $ex ) {
-			if ( preg_match($ex, $entry->link()) === 1 ) {
-					$read = true;
-			}
+		print "Iterating";
+		if (false !== strpos($entry->link(), $ex ) ) {
+			$read = true;
+		}
 	}
 	if (! $read){
+		print "Constantly failing";
 		return $entry;
 	}
-			
+	print "should work";
 	$data = "{\"url\": \"" . $entry->link() ."\"}";
 	$headers[] = 'Content-Type: application/json';
 

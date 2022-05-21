@@ -3,6 +3,6 @@
 	"author": "printfuck",
 	"description": "fetch article content for every feed with readability",
 	"version": "0.7.1",
-	"entrypoint": "RedditImage",
-	"type": "user"
+	"entrypoint": "Readability",
+	"type": "system"
 }
