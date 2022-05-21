@@ -22,16 +22,15 @@ class ReadabilityExtension extends Minz_Extension {
 	];
 
 	foreach ( $regex as $ex ) {
-		print "Iterating";
 		if (false !== strpos($entry->link(), $ex ) ) {
 			$read = true;
 		}
 	}
+
 	if (! $read){
-		print "Constantly failing";
 		return $entry;
 	}
-	print "should work";
+
 	$data = "{\"url\": \"" . $entry->link() ."\"}";
 	$headers[] = 'Content-Type: application/json';
 
@@ -41,14 +40,15 @@ class ReadabilityExtension extends Minz_Extension {
 	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 	$result = curl_exec($c);
 	$c_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
-	//$c_error = curl_error($c);
 	curl_close($c);
 
 	if ($c_status !== 200) {
-	    return $entry;
+		return $entry;
 	}
+
 	$val = json_decode($result, true);
 	$entry->_content($val["content"]);
+	
 	return $entry;
     }
 
