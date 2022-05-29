@@ -4,5 +4,5 @@
 	"description": "fetch article content for every feed with readability",
 	"version": "0.7.1",
 	"entrypoint": "Readability",
-	"type": "system"
+	"type": "user"
 }
