@@ -96,10 +96,10 @@ class ReadabilityExtension extends Minz_Extension {
 	}
     }
 
-    public function getConfStoreR( $list, $id ) {
+    public function getConfStoreR( $id ) {
 		return array_key_exists($id, $this->rStore);
     }
-    public function getConfStoreM( $list, $id ) {
+    public function getConfStoreM( $id ) {
 		return array_key_exists($id, $this->mStore);
     }
     
