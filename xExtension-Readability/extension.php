@@ -9,10 +9,6 @@ class ReadabilityExtension extends Minz_Extension {
     private $rStore;
 
     public function init() {
-        #$this->registerTranslates();
-
-	    #$current_user = Minz_Session::param('currentUser');
-	Minz_View::appendScript($this->getFileUrl('read_ext.js', 'js'));
 
         $this->registerHook('entry_before_insert', array($this, 'fetchStuff'));
     }
@@ -20,22 +16,12 @@ class ReadabilityExtension extends Minz_Extension {
     public function fetchStuff($entry) {
 	
 	$this->loadConfigValues();
-	/*
-	$read = false;
-			
-    	$regex = [
-		'nytimes.com',
-		'ncsjdnfsd.de'
-	];
-
-	foreach ( $regex as $ex ) {
-		if (false !== strpos($entry->link(), $ex ) ) {
-			$read = true;
-		}
-	}
-	 */
 	$host = '';
 
+	/*
+	Both APIs are basically the same, so the host for request parsing is exchangeable
+	*/
+	
 	if ( array_key_exists($entry->feed(false), $this->mStore) )
 		$host = $this->mercHost;
 
@@ -45,11 +31,9 @@ class ReadabilityExtension extends Minz_Extension {
 	if ($host === '')
 		return $entry;
 
-	/*if (! $read){
-		return $entry;
-	}*/
 	$data = "{\"url\": \"" . $entry->link() ."\"}";
 	$headers[] = 'Content-Type: application/json';
+	
 
 	$c = curl_init($host);
 	curl_setopt($c, CURLOPT_POSTFIELDS, $data);
@@ -68,6 +52,11 @@ class ReadabilityExtension extends Minz_Extension {
 	return $entry;
     }
 
+    /*
+     * These are called from configure.phtml, which is controlled by handleConfigureAction(), 
+     * thus values are already fetched from userconfig and FeedDAO.
+     */
+
     public function getReadHost() {
 	    return $this->readHost;
     }
@@ -75,11 +64,14 @@ class ReadabilityExtension extends Minz_Extension {
     public function getMercHost() {
 	    return $this->mercHost;
     }
-    
+
     public function getFeeds() {
 	    return $this->feeds;
     }
 
+    /*
+    Loading basic variables from user storage
+    */
     public function loadConfigValues()
     {
         if (!class_exists('FreshRSS_Context', false) || null === FreshRSS_Context::$user_conf) {
@@ -104,27 +96,27 @@ class ReadabilityExtension extends Minz_Extension {
 	}
     }
 
-    public function getConfStore( $list, $id ) {
-    	if ($list === 'm' ) {
-		return array_key_exists($id, $this->mStore);
-	} else {
+    public function getConfStoreR( $list, $id ) {
 		return array_key_exists($id, $this->rStore);
-	}
-	return false;
     }
-
+    public function getConfStoreM( $list, $id ) {
+		return array_key_exists($id, $this->mStore);
+    }
+    
+    /*
+     * handleConfigureAction() is only executed on loading and saving the extenstion's configuration page.
+     * If the Request type is POST, values are being saved. It looks weird, but I copied it from another example and it works flawlessly.
+     */
     public function handleConfigureAction()
     {
-	//$this->registerTranslates();
-
 	$feedDAO = FreshRSS_Factory::createFeedDao();
 	$this->feeds = $feedDAO->listFeeds();
 
 	if (Minz_Request::isPost()) {
-	    //FreshRSS_Context::$user_conf->yt_nocookie = (int)Minz_Request::param('yt_nocookie', 0);
 	    $mstore = [];
 	    $rstore = [];
-	    foreach ( $this->feeds as $f ) {	
+	    foreach ( $this->feeds as $f ) {
+	            //I rather encode only a few 'true' entries, than 400+ false entries + the few 'true' entries	    
 		    if ((bool)Minz_Request::param("read_".$f->id(), 0)){
 			    $rstore[$f->id()] = true;
 		    }
@@ -133,7 +125,7 @@ class ReadabilityExtension extends Minz_Extension {
 			    $mstore[$f->id()] = true;
 		    }
 	    }
-	
+	    // I don't know if it's possible to save arrays, so it's encoded with json
 	    FreshRSS_Context::$user_conf->read_ext_mercury = (string)json_encode($mstore);
 	    FreshRSS_Context::$user_conf->read_ext_readability = (string)json_encode($rstore);
 

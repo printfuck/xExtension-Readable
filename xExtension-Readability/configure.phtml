@@ -21,8 +21,8 @@
 		foreach ($this->getFeeds() as $f) {
 	?>
 		<tr>
-			<td> <input type="checkbox" id="merc_<?php echo $f->id() ?>" name="merc_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStore('m', $f->id()) ? 'checked' : ''; ?>> </td>
-			<td> <input type="checkbox" id="read_<?php echo $f->id() ?>" name="read_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStore('r', $f->id()) ? 'checked' : ''; ?>> </td>
+			<td> <input type="checkbox" id="merc_<?php echo $f->id() ?>" name="merc_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStoreM($f->id()) ? 'checked' : ''; ?>> </td>
+			<td> <input type="checkbox" id="read_<?php echo $f->id() ?>" name="read_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStoreR($f->id()) ? 'checked' : ''; ?>> </td>
 	    		<td><?php echo $f->name() ?></td>
 		</tr>
 		
