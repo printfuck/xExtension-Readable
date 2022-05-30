@@ -32,5 +32,7 @@ services:
   read:
     image: phpdockerio/readability-js-server
     restart: always
-    ports: # Not really necessary
-      - '127.0.0.1:8081:3000'
+
+  merc:
+    image: wangqiru/mercury-parser-api
+    restart: always
