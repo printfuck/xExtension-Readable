@@ -1,6 +1,6 @@
 <?php
 
-class ReadableExtension extends Minz_Extension {
+class ReadabilityExtension extends Minz_Extension {
 
     private $readHost;
     private $mercHost;
@@ -18,26 +18,23 @@ class ReadableExtension extends Minz_Extension {
 	$this->loadConfigValues();
 	$host = '';
 
-	/*
-	 * Both APIs are basically the same, so the host for request parsing is exchangeable
-	 */
-	
-	if ( array_key_exists($entry->feed(false), $this->mStore) )
-		$host = $this->mercHost;
+	if ( array_key_exists($entry->feed(false), $this->mStore) ) {
+		$host = $this->mercHost."/parser?url=".$entry->link();
+		$c = curl_init($host);
+    	}
 
-	if ( array_key_exists($entry->feed(false), $this->rStore) )
+	if ( array_key_exists($entry->feed(false), $this->rStore) ) {
 		$host = $this->readHost;
+		$c = curl_init($host);
+		$data = "{\"url\": \"" . $entry->link() ."\"}";
+		$headers[] = 'Content-Type: application/json';
+		curl_setopt($c, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
+	}
 
 	if ($host === '')
 		return $entry;
 
-	$data = "{\"url\": \"" . $entry->link() ."\"}";
-	$headers[] = 'Content-Type: application/json';
-	
-
-	$c = curl_init($host);
-	curl_setopt($c, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
 	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 	$result = curl_exec($c);
 	$c_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
@@ -96,10 +93,10 @@ class ReadableExtension extends Minz_Extension {
 	}
     }
 
-    public function getConfStoreR( $id ) {
+    public function getConfStoreR($id ) {
 		return array_key_exists($id, $this->rStore);
     }
-    public function getConfStoreM( $id ) {
+    public function getConfStoreM($id ) {
 		return array_key_exists($id, $this->mStore);
     }
     
