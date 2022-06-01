@@ -1,0 +1,8 @@
+{
+	"name": "Readable",
+	"author": "printfuck",
+	"description": "fetch article content for every feed with readability or mercury",
+	"version": "0.1.1",
+	"entrypoint": "Readable",
+	"type": "user"
+}
