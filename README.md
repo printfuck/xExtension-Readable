@@ -12,7 +12,7 @@ After ticking the feeds **YOU HAVE TO SCROLL DOWN AND HIT SUBMIT**
 
 In the following example the Readability host is configured according to the docker-compose.yml from this repo:
 
-![img](https://store.eris.cc/uploads/4e0d69953ef34df7dc581e7c2fd7c0fb.JPG)
+![img2](https://store.eris.cc/uploads/4e0d69953ef34df7dc581e7c2fd7c0fb.JPG)
 
 If both options are ticked, the Readability parser will be used.
 
