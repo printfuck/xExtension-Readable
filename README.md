@@ -1,6 +1,6 @@
 # Readability Addon for FreshRSS
 
-Using Readability or Mercury this addon fetches article content from any feed. 
+This extension uses Readability or Mercury for fetching article content from any feed. 
 
 The Readbility API is offered by [phpdockerio's Docker image](https://hub.docker.com/r/phpdockerio/readability-js-server) and the Mercury API is offered by [wangqiru's Docker image](https://hub.docker.com/r/wangqiru/mercury-parser-api).
 
@@ -12,7 +12,7 @@ After ticking the feeds **YOU HAVE TO SCROLL DOWN AND HIT SUBMIT**.
 
 In the following example the Readability host is configured according to the docker-compose.yml from this repo:
 
-[image](https://store.eris.cc/uploads/4e0d69953ef34df7dc581e7c2fd7c0fb.JPG)
+[image](https://store.eris.cc/uploads/4e0d69953ef34df7dc581e7c2fd7c0fb.JPG?)
 
 If both options are ticked, the Readability parser will be used.
 
@@ -32,7 +32,7 @@ If you run FreshRSS from docker-compose, this is what you need to add to your co
 
 Since both images offer their API on port 3000 and are only used locally, this reduced config suffices our purpose.
 
-### local instance
+### Local Instance
 
 If you run freshrss locally without docker, you can still use the docker images, but you'd have to forward the ports to you local host, so freshrss can access them:
 
