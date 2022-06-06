@@ -1,6 +1,6 @@
 # Readability Addon for FreshRSS
 
-This extension uses Readability or Mercury for fetching article content from any feed. 
+This extension uses Readability or Mercury for fetching article content for selected feeds. 
 
 The Readbility API is offered by [phpdockerio's Docker image](https://hub.docker.com/r/phpdockerio/readability-js-server) and the Mercury API is offered by [wangqiru's Docker image](https://hub.docker.com/r/wangqiru/mercury-parser-api).
 

@@ -1,6 +1,6 @@
 <?php
 
-class ReadabilityExtension extends Minz_Extension {
+class ReadableExtension extends Minz_Extension {
 
     private $readHost;
     private $mercHost;
