@@ -5,6 +5,7 @@ class ReadableExtension extends Minz_Extension {
     private $readHost;
     private $mercHost;
     private $feeds;
+    private $cats;
     private $mStore;
     private $rStore;
 
@@ -66,6 +67,10 @@ class ReadableExtension extends Minz_Extension {
 	    return $this->feeds;
     }
 
+    public function getCategories() {
+	    return $this->cats;
+    }
+
     /*
     Loading basic variables from user storage
     */
@@ -107,7 +112,9 @@ class ReadableExtension extends Minz_Extension {
     public function handleConfigureAction()
     {
 	$feedDAO = FreshRSS_Factory::createFeedDao();
+	$catDAO = FreshRSS_Factory::createCategoryDao();
 	$this->feeds = $feedDAO->listFeeds();
+	$this->cats = $catDAO->listCategories(true,false); 
 
 	if (Minz_Request::isPost()) {
 	    $mstore = [];
