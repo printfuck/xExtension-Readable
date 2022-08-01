@@ -4,9 +4,9 @@ class ReadableExtension extends Minz_Extension {
 
     private $readHost;
     private $mercHost;
-    private $feeds;
     private $mStore;
     private $rStore;
+	private $categories;
 
     public function init() {
 
@@ -62,9 +62,9 @@ class ReadableExtension extends Minz_Extension {
 	    return $this->mercHost;
     }
 
-    public function getFeeds() {
-	    return $this->feeds;
-    }
+	public function getCategories() {
+		return $this->categories;
+	}
 
     /*
     Loading basic variables from user storage
@@ -107,19 +107,23 @@ class ReadableExtension extends Minz_Extension {
     public function handleConfigureAction()
     {
 	$feedDAO = FreshRSS_Factory::createFeedDao();
-	$this->feeds = $feedDAO->listFeeds();
+	$with_categories = $feedDAO->arrayFeedCategoryNames();
+	$this->categories = array();
+	foreach ( $with_categories as $feed ) {
+		$this->categories[$feed['c_name']][] = $feed;
+	}
 
 	if (Minz_Request::isPost()) {
 	    $mstore = [];
 	    $rstore = [];
-	    foreach ( $this->feeds as $f ) {
+	    foreach ( $with_categories as $f ) {
 	            //I rather encode only a few 'true' entries, than 400+ false entries + the few 'true' entries	    
-		    if ((bool)Minz_Request::param("read_".$f->id(), 0)){
-			    $rstore[$f->id()] = true;
+		    if ((bool)Minz_Request::param("read_".$f["id"], 0)){
+			    $rstore[$f["id"]] = true;
 		    }
 
-		    if ( (bool)Minz_Request::param("merc_".$f->id(), 0) ) {
-			    $mstore[$f->id()] = true;
+		    if ( (bool)Minz_Request::param("merc_".$f["id"], 0) ) {
+			    $mstore[$f["id"]] = true;
 		    }
 	    }
 	    // I don't know if it's possible to save arrays, so it's encoded with json
