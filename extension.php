@@ -19,12 +19,12 @@ class ReadableExtension extends Minz_Extension {
 	$this->loadConfigValues();
 	$host = '';
 
-	if ( array_key_exists($entry->feed(false), $this->mStore) ) {
+	if ( array_key_exists($entry->feedId(), $this->mStore) ) {
 		$host = $this->mercHost."/parser?url=".$entry->link();
 		$c = curl_init($host);
     	}
 
-	if ( array_key_exists($entry->feed(false), $this->rStore) ) {
+	if ( array_key_exists($entry->feedId(), $this->rStore) ) {
 		$host = $this->readHost;
 		$c = curl_init($host);
 		$data = "{\"url\": \"" . $entry->link() ."\"}";
@@ -46,6 +46,9 @@ class ReadableExtension extends Minz_Extension {
 	    return $entry;
 	}
 	$val = json_decode($result, true);
+	if (empty($val) || empty($val["content"])) {
+		return $entry;
+	}
 	$entry->_content($val["content"]);
 	return $entry;
     }
