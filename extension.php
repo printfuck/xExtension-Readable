@@ -18,13 +18,14 @@ class ReadableExtension extends Minz_Extension {
 	
 	$this->loadConfigValues();
 	$host = '';
+	$id = $entry->toArray()['id_feed'];
 
-	if ( array_key_exists($entry->feedId(), $this->mStore) ) {
+	if ( array_key_exists($id, $this->mStore) ) {
 		$host = $this->mercHost."/parser?url=".$entry->link();
 		$c = curl_init($host);
     	}
 
-	if ( array_key_exists($entry->feedId(), $this->rStore) ) {
+	if ( array_key_exists($id, $this->rStore) ) {
 		$host = $this->readHost;
 		$c = curl_init($host);
 		$data = "{\"url\": \"" . $entry->link() ."\"}";
