@@ -22,7 +22,7 @@
 
 		<h3><?php echo $c->name()?></h3>
 		<table>
-		<tr><td>Mercury</td><td>Readability</td><td>Feed</td></tr>
+		<tr><td>Mercury</td><td>Readability</td><td>override_content</td><td>Feed</td></tr>
 		<?php
 			foreach ( $c->feeds() as $f) {
 		?>
@@ -30,6 +30,7 @@
 			<tr>
 			<td> <input type="checkbox" id="merc_<?php echo $f->id() ?>" name="merc_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStoreM($f->id()) ? 'checked' : ''; ?>> </td>
 			<td> <input type="checkbox" id="read_<?php echo $f->id() ?>" name="read_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStoreR($f->id()) ? 'checked' : ''; ?>> </td>
+			<td> <input type="checkbox" id="override_content_<?php echo $f->id() ?>" name="override_content_<?php echo $f->id() ?>" value="1" <?php echo $this->getConfStoreO($f->id()) ? 'checked' : ''; ?>> </td>
 	    		<td><?php echo $f->name() ?></td>
 			</tr>
 		

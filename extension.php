@@ -8,6 +8,7 @@ class ReadableExtension extends Minz_Extension {
     private $cats;
     private $mStore;
     private $rStore;
+	private $oStore; // override_content
 
     public function init() {
 
@@ -50,9 +51,18 @@ class ReadableExtension extends Minz_Extension {
 	if (empty($val) || empty($val["content"])) {
 		return $entry;
 	}
-	$entry->_content($val["content"]);
+	//$entry->_content($val["content"]);  // original line
+	/* override_content:
+	 * If content override is not requested, append content
+	 */
+	if ( array_key_exists($id, $this->oStore) ) {
+		$entry->_content($val["content"]);
+	} else {
+		$entry->_content($entry->content() . $val["content"]);
+	}
+
 	return $entry;
-    }
+}
 
     /*
      * These are called from configure.phtml, which is controlled by handleConfigureAction(), 
@@ -82,7 +92,7 @@ class ReadableExtension extends Minz_Extension {
     {
         if (!class_exists('FreshRSS_Context', false) || null === FreshRSS_Context::$user_conf) {
             return;
-	}
+		}
 
         if (FreshRSS_Context::$user_conf->read_ext_read_host != '') {
             $this->readHost = FreshRSS_Context::$user_conf->read_ext_read_host;
@@ -92,14 +102,20 @@ class ReadableExtension extends Minz_Extension {
         }
         if (FreshRSS_Context::$user_conf->read_ext_mercury != '') {
             $this->mStore = json_decode(FreshRSS_Context::$user_conf->read_ext_mercury, true);
-	} else {
-	    $this->mStore = [];
-	}
+		} else {
+	    	$this->mStore = [];
+		}
         if (FreshRSS_Context::$user_conf->read_ext_readability != '') {
             $this->rStore = json_decode(FreshRSS_Context::$user_conf->read_ext_readability, true);
-	} else {
-	    $this->rStore = [];
-	}
+		} else {
+	    	$this->rStore = [];
+		}
+		// override_content
+		if (FreshRSS_Context::$user_conf->read_ext_override != '') {
+            $this->oStore = json_decode(FreshRSS_Context::$user_conf->read_ext_override, true);
+		} else {
+	    	$this->oStore = [];
+		}
     }
 
     public function getConfStoreR($id ) {
@@ -107,6 +123,10 @@ class ReadableExtension extends Minz_Extension {
     }
     public function getConfStoreM($id ) {
 		return array_key_exists($id, $this->mStore);
+    }
+	// override_content
+	public function getConfStoreO($id ) {
+		return array_key_exists($id, $this->oStore);
     }
     
     /*
@@ -123,6 +143,7 @@ class ReadableExtension extends Minz_Extension {
 	if (Minz_Request::isPost()) {
 	    $mstore = [];
 	    $rstore = [];
+		$override_store = [];  // override_content
 	    foreach ( $this->feeds as $f ) {
 	            //I rather encode only a few 'true' entries, than 400+ false entries + the few 'true' entries	    
 		    if ((bool)Minz_Request::param("read_".$f->id(), 0)){
@@ -132,11 +153,16 @@ class ReadableExtension extends Minz_Extension {
 		    if ( (bool)Minz_Request::param("merc_".$f->id(), 0) ) {
 			    $mstore[$f->id()] = true;
 		    }
+
+			// override_content
+			if ( (bool)Minz_Request::param("override_content_".$f->id(), 0) ) {
+			    $override_store[$f->id()] = true;
+		    }
 	    }
 	    // I don't know if it's possible to save arrays, so it's encoded with json
 	    FreshRSS_Context::$user_conf->read_ext_mercury = (string)json_encode($mstore);
 	    FreshRSS_Context::$user_conf->read_ext_readability = (string)json_encode($rstore);
-
+		FreshRSS_Context::$user_conf->read_ext_override = (string)json_encode($override_store);  // override_content
 
 	    FreshRSS_Context::$user_conf->read_ext_merc_host = (string)Minz_Request::param('read_mercury_host');
 	    FreshRSS_Context::$user_conf->read_ext_read_host = (string)Minz_Request::param('read_readability_host');
