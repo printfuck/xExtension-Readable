@@ -36,3 +36,14 @@ services:
   merc:
     image: wangqiru/mercury-parser-api
     restart: always
+
+  fivefilters:
+    image: "heussd/fivefilters-full-text-rss:latest"
+    environment:
+      # Leave empty to disable admin section
+      - FTR_ADMIN_PASSWORD=
+    volumes:
+      - "./rss-cache:/var/www/html/cache/rss"
+    # I'd recommend, making this accessible for regular use
+    ports:
+      - "127.0.0.1:8006:80"
