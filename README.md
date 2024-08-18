@@ -24,11 +24,11 @@ If you run FreshRSS from docker-compose, this is what you need to add to your co
 
 ```
   read:
-    image: phpdockerio/readability-js-server
+    image: "phpdockerio/readability-js-server"
     restart: always
 
   merc:
-    image: wangqiru/mercury-parser-api
+    image: "wangqiru/mercury-parser-api"
     restart: always
 
   fivefilters:
@@ -43,7 +43,7 @@ If you run FreshRSS from docker-compose, this is what you need to add to your co
     restart: always
 ```
 
-Since both Readibility and Mercury offer their API on port 3000 and are only used locally, the reduced config suffices our purpose. The FiveFilters implementation on the other hand is a full blown feed customizer with an easy to use web interface, that will also generate whole feed urls for you to add to FreshRSS itself. I'd **highly** recommend to make this frontend available for your usage.
+Since both Readability and Mercury offer their API on port 3000 and are only used locally, the reduced config suffices our purpose. The FiveFilters implementation on the other hand is a full blown feed customizer with an easy to use web interface, that will also generate whole feed urls for you to add to FreshRSS itself. I'd **highly** recommend to make this frontend available for your usage.
 
 ### Local Instance
 
