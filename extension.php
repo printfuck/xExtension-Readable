@@ -4,10 +4,12 @@ class ReadableExtension extends Minz_Extension {
 
     private $readHost;
     private $mercHost;
+    private $fiveHost;
     private $feeds;
     private $cats;
     private $mStore;
     private $rStore;
+    private $fStore;
 
     public function init() {
 
@@ -18,7 +20,11 @@ class ReadableExtension extends Minz_Extension {
 	
 	$this->loadConfigValues();
 	$host = '';
-	$id = $entry->toArray()['id_feed'];
+	if (empty($entry->toArray()['id_feed'])){
+		$id = $entry->feed(false);
+	} else { 
+		$id = $entry->toArray()['id_feed'];
+	}
 
 	if ( array_key_exists($id, $this->mStore) ) {
 		$host = $this->mercHost."/parser?url=".$entry->link();
@@ -33,6 +39,11 @@ class ReadableExtension extends Minz_Extension {
 		curl_setopt($c, CURLOPT_POSTFIELDS, $data);
 		curl_setopt($c, CURLOPT_HTTPHEADER, $headers);
 	}
+	
+	if ( array_key_exists($id, $this->fStore) ) {
+		$host = $this->fiveHost."/extract.php?url=".$entry->link();
+		$c = curl_init($host);
+    	}
 
 	if ($host === '')
 		return $entry;
@@ -67,6 +78,10 @@ class ReadableExtension extends Minz_Extension {
 	    return $this->mercHost;
     }
 
+    public function getFiveHost() {
+	    return $this->fiveHost;
+    }
+
     public function getFeeds() {
 	    return $this->feeds;
     }
@@ -90,6 +105,9 @@ class ReadableExtension extends Minz_Extension {
         if (FreshRSS_Context::$user_conf->read_ext_merc_host != '') {
             $this->mercHost = FreshRSS_Context::$user_conf->read_ext_merc_host;
         }
+        if (FreshRSS_Context::$user_conf->read_ext_five_host != '') {
+            $this->fiveHost = FreshRSS_Context::$user_conf->read_ext_five_host;
+        }
         if (FreshRSS_Context::$user_conf->read_ext_mercury != '') {
             $this->mStore = json_decode(FreshRSS_Context::$user_conf->read_ext_mercury, true);
 	} else {
@@ -100,6 +118,11 @@ class ReadableExtension extends Minz_Extension {
 	} else {
 	    $this->rStore = [];
 	}
+        if (FreshRSS_Context::$user_conf->read_ext_five != '') {
+            $this->fStore = json_decode(FreshRSS_Context::$user_conf->read_ext_five, true);
+	} else {
+	    $this->fStore = [];
+	}
     }
 
     public function getConfStoreR($id ) {
@@ -107,6 +130,9 @@ class ReadableExtension extends Minz_Extension {
     }
     public function getConfStoreM($id ) {
 		return array_key_exists($id, $this->mStore);
+    }
+    public function getConfStoreF($id ) {
+		return array_key_exists($id, $this->fStore);
     }
     
     /*
@@ -123,23 +149,30 @@ class ReadableExtension extends Minz_Extension {
 	if (Minz_Request::isPost()) {
 	    $mstore = [];
 	    $rstore = [];
+	    $fstore = [];
 	    foreach ( $this->feeds as $f ) {
 	            //I rather encode only a few 'true' entries, than 400+ false entries + the few 'true' entries	    
 		    if ((bool)Minz_Request::param("read_".$f->id(), 0)){
 			    $rstore[$f->id()] = true;
 		    }
 
-		    if ( (bool)Minz_Request::param("merc_".$f->id(), 0) ) {
+		    if ((bool)Minz_Request::param("merc_".$f->id(), 0) ) {
 			    $mstore[$f->id()] = true;
+		    }
+
+		    if ((bool)Minz_Request::param("ff_".$f->id(), 0) ) {
+			    $fstore[$f->id()] = true;
 		    }
 	    }
 	    // I don't know if it's possible to save arrays, so it's encoded with json
 	    FreshRSS_Context::$user_conf->read_ext_mercury = (string)json_encode($mstore);
 	    FreshRSS_Context::$user_conf->read_ext_readability = (string)json_encode($rstore);
+	    FreshRSS_Context::$user_conf->read_ext_five = (string)json_encode($fstore);
 
 
 	    FreshRSS_Context::$user_conf->read_ext_merc_host = (string)Minz_Request::param('read_mercury_host');
 	    FreshRSS_Context::$user_conf->read_ext_read_host = (string)Minz_Request::param('read_readability_host');
+	    FreshRSS_Context::$user_conf->read_ext_five_host = (string)Minz_Request::param('read_fivefilters_host');
 	
 	    FreshRSS_Context::$user_conf->save();
 	}

@@ -2,7 +2,7 @@
 	"name": "Readable",
 	"author": "printfuck",
 	"description": "Fetch article content for selected feeds with readability or mercury",
-	"version": "0.2",
+	"version": "0.3",
 	"entrypoint": "Readable",
 	"type": "user"
 }
