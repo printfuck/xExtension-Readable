@@ -42,8 +42,10 @@ services:
     environment:
       # Leave empty to disable admin section
       - FTR_ADMIN_PASSWORD=
-    volumes:
-      - "./rss-cache:/var/www/html/cache/rss"
+    # When mounting rss-cache make sure to make it writable 
+    # volumes:
+    #  - "./rss-cache:/var/www/html/cache/rss
+    
     # I'd recommend, making this accessible for regular use
     ports:
       - "127.0.0.1:8006:80"
