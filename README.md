@@ -10,9 +10,9 @@ This extension uses Readability, Mercury or the free FiveFilters implementation 
 
 Configure the hosts in the configuration section of the extension according to your config. 
 
-After ticking the feeds **YOU HAVE TO SCROLL DOWN AND HIT SUBMIT**.
+After ticking the feeds **YOU HAVE TO HIT SUBMIT AT THE BOTTOM**.
 
-In the following example the Readability host is configured according to the docker-compose.yml from this repo:
+In the following example the hosts are configured according to the docker-compose.yml from this repo:
 
 ![image](https://store.eris.cc/uploads/2f9775d35ab6b7f89f66bbabc9f1fe4d.JPG?)
 
@@ -20,15 +20,21 @@ If all options are ticked, the FiveFilters parser will be used.
 
 ## Setup 
 
-If you run FreshRSS from docker-compose, this is what you need to add to your config. Maybe have a look at the example `docker-compose.yml` file for complete reference.
+### Install the Extension
+
+You have to clone the extension into your designated extension folder
+
+### Deploy the Containers
+
+If you run FreshRSS with docker-compose, this is what you need to add to your config. Maybe have a look at the example `compose.yml` file for complete reference.
 
 ```
   read:
-    image: "phpdockerio/readability-js-server"
+    image: phpdockerio/readability-js-server
     restart: always
 
   merc:
-    image: "wangqiru/mercury-parser-api"
+    image: wangqiru/mercury-parser-api
     restart: always
 
   fivefilters:
@@ -43,7 +49,7 @@ If you run FreshRSS from docker-compose, this is what you need to add to your co
     restart: always
 ```
 
-Since both Readability and Mercury offer their API on port 3000 and are only used locally, the reduced config suffices our purpose. The FiveFilters implementation on the other hand is a full blown feed customizer with an easy to use web interface, that will also generate whole feed urls for you to add to FreshRSS itself. I'd **highly** recommend to make this frontend available for your usage.
+Since both Readibility and Mercury offer their API on port 3000 and are only used locally, the reduced config suffices our purpose. The FiveFilters implementation on the other hand is a full blown feed customizer with an easy to use web interface, that will also generate whole feed urls for you to add to FreshRSS itself. I'd **highly** recommend to make this frontend available for your usage.
 
 ### Local Instance
 
@@ -79,11 +85,12 @@ In that case your value for the *Readability Host* is `http://127.0.0.1:3000`; f
 
 ### No Containers ...
 
-If you don't like containers at all, I can't help you. 
+If you don't like containers at all, I can't help you.
 
 ## Notes
 
  * I won't provide help on problems inside the used containers.
+ * The compose.yml file in this repo is just an example and doesn't auto-deploy this addon on FreshRSS
  
 
 

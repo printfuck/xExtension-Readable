@@ -1,23 +1,28 @@
 <form action="<?php echo _url('extension', 'configure', 'e', urlencode($this->getName())); ?>" method="post">
 <input type="hidden" name="_csrf" value="<?php echo FreshRSS_Auth::csrfToken(); ?>" />
 
-    <div class="form-group">
+    <div class="form-group form-fix">
 
 		<p> Configure the following values according to the <a href="https://github.com/printfuck/xExtension-Readable#setup" target="_blank">instructions</a> </p>
-
+		<div>
 		<label class="group-name" for="read_fivefilters_host">Five Filters Host</label>
 		<div class="group-controls">
 			<input type="text" id="read_fivefilters_host" name="read_fivefilters_host" value="<?php echo $this->getFiveHost(); ?>" min="50" data-leave-validation="1">
 		</div>
-
+		</div>
+		
+		<div>
 		<label class="group-name" for="read_readability_host">Readbility Host</label>
 		<div class="group-controls">
 	    	<input type="text" id="read_readability_host" name="read_readability_host" value="<?php echo $this->getReadHost(); ?>" min="50" data-leave-validation="1">
 		</div>
+		</div>
 
+		<div>
 		<label class="group-name" for="read_mercury_host">Mercury Host</label>
 		<div class="group-controls">
 	    	<input type="text" id="read_mercury_host" name="read_mercury_host" value="<?php echo $this->getMercHost(); ?>" min="100" data-leave-validation="1">
+		</div>
 		</div>
     </div>
 
@@ -31,30 +36,74 @@
 			<h3><?php echo $c->name()?></h3>
 			<table>
 			<tr>
-				<td>Five Filters</td>
-				<td>Mercury</td>
-				<td>Readability</td>
-				<td>Feed</td></tr>
+				<td class="rotate"><div><span>Five Filters</span></div></td>
+				<td class="rotate"><div><span>Mercury</span></div></td>
+				<td class="rotate"><div><span>Readability</span></div></td>
+				<td class="rotatelast"><div><span>Feed</span></div></td>
+			</tr>
+			<tr>
+				<td class="chckbx"> <input type="checkbox" 
+					id="ff_cat_<?php echo $c->id() ?>" 
+					name="ff_cat_<?php echo $c->id() ?>" 
+					value="1" <?php echo $this->getConfStoreCat("ff", $c->id()) ? 'checked' : ''; ?> >
+				</td>
+				<td class="chckbx"> <input type="checkbox" 
+					id="merc_cat_<?php echo $c->id() ?>" 
+					name="merc_cat_<?php echo $c->id() ?>" 
+					value="1" <?php echo $this->getConfStoreCat("merc", $c->id()) ? 'checked' : ''; ?> >
+				</td>
+				<td class="chckbx"> <input type="checkbox" 
+					id="read_cat_<?php echo $c->id() ?>" 
+					name="read_cat_<?php echo $c->id() ?>" 
+					value="1" <?php echo $this->getConfStoreCat("read", $c->id()) ? 'checked' : ''; ?> >
+				</td>
+				<td class="boldtd" >Whole Feed: <?php echo $c->name()?></td>
+			</tr>
 
 				<?php
 				foreach ( $c->feeds() as $f) {
+					$catffchecked = $this->getConfStoreCat("ff", $c->id()); 
+					$catmercchecked = $this->getConfStoreCat("merc", $c->id()); 
+					$catreadchecked = $this->getConfStoreCat("read", $c->id()); 
+					$allcatcheck = $catffchecked || $catmercchecked || $catreadchecked
+
 				?>
 
 					<tr>
-					<td> <input type="checkbox" 
-								id="ff_<?php echo $f->id() ?>" 
-								name="ff_<?php echo $f->id() ?>" 
-								value="1" <?php echo $this->getConfStoreF($f->id()) ? 'checked' : ''; ?>> 
+					<td class="chckbx"> <input type="checkbox" 
+						id="ff_<?php echo $f->id() ?>" 
+						name="ff_<?php echo $f->id() ?>" 
+						value="1" 
+						<?php 
+							echo $this->getConfStoreF($f->id()) ? 'checked' : '';
+							echo $catffchecked ? "checked" : '';
+							echo $allcatcheck ? " disabled" : '';
+						?>
+					> 
 					</td>
-					<td> <input type="checkbox" 
-								id="merc_<?php echo $f->id() ?>" 
-								name="merc_<?php echo $f->id() ?>" 
-								value="1" <?php echo $this->getConfStoreM($f->id()) ? 'checked' : ''; ?>> 
+					<td class="chckbx"> <input type="checkbox" 
+						id="merc_<?php echo $f->id() ?>" 
+						name="merc_<?php echo $f->id() ?>" 
+						value="1"
+						<?php 
+							echo $this->getConfStoreM($f->id()) ? 'checked' : '';
+							//echo $this->getConfStoreCat("merc", $c->id()) ? "checked disabled" : ''; 
+							echo $catmercchecked ? "checked" : '';
+							echo $allcatcheck ? " disabled" : '';
+						?>
+					> 
 					</td>
-					<td> <input type="checkbox" 
-								id="read_<?php echo $f->id() ?>" 
-								name="read_<?php echo $f->id() ?>"
-								value="1" <?php echo $this->getConfStoreR($f->id()) ? 'checked' : ''; ?>>
+					<td class="chckbx"> <input type="checkbox" 
+						id="read_<?php echo $f->id() ?>" 
+						name="read_<?php echo $f->id() ?>"
+						value="1"
+						<?php 
+							echo $this->getConfStoreR($f->id()) ? 'checked' : '';
+							//echo $this->getConfStoreCat("read", $c->id()) ? "checked disabled" : ''; 
+							echo $catreadchecked ? "checked" : '';
+							echo $allcatcheck ? " disabled" : '';
+						?>
+					>
 
 					</td>
 					<td><?php echo $f->name() ?></td>
