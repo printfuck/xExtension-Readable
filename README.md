@@ -28,7 +28,7 @@ You have to clone the extension into your designated extension folder
 
 If you run FreshRSS with docker-compose, this is what you need to add to your config. Maybe have a look at the example `compose.yml` file for complete reference.
 
-```
+```yml
   read:
     image: phpdockerio/readability-js-server
     restart: always
@@ -55,7 +55,7 @@ Since both Readibility and Mercury offer their API on port 3000 and are only use
 
 If you run freshrss locally without docker, you can still use the docker images, but you'd have to forward the ports to you local host, so freshrss can access them:
 
-```
+```yml
 services:
   read:
     image: phpdockerio/readability-js-server
