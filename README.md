@@ -6,6 +6,8 @@ This extension uses Readability, Mercury or the free FiveFilters implementation 
  * The Mercury API is offered by [wangqiru's Docker image](https://hub.docker.com/r/wangqiru/mercury-parser-api).
  * The FiveFilters API is offered by [heussd's Docker image](https://github.com/heussd/fivefilters-full-text-rss-docker).
 
+There is also an alternative ![freshrss-af-readability](https://github.com/Niehztog/freshrss-af-readability), which uses the five-filters implementation natively and does not require any further setup.
+
 ## Usage
 
 Configure the hosts in the configuration section of the extension according to your config. 
