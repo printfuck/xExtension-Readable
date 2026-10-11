@@ -56,7 +56,7 @@ class ReadableExtension extends Minz_Extension {
 	$result = curl_exec($c);
 	$c_status = curl_getinfo($c, CURLINFO_HTTP_CODE);
 	//$c_error = curl_error($c);
-	curl_close($c);
+	unset($c);
 
 	if ($c_status !== 200) {
 		return $entry;
@@ -169,22 +169,22 @@ class ReadableExtension extends Minz_Extension {
 	    $cstore = ["ff" => [], "merc" => [], "read" => []];
 	    foreach ( $this->feeds as $f ) {
 	            //I rather encode only a few 'true' entries, than 400+ false entries + the few 'true' entries	    
-		    if ((bool)Minz_Request::param("read_".$f->id(), 0)){
+		    if (Minz_Request::paramBoolean("read_".$f->id())){
 			    $rstore[$f->id()] = true;
 		    }
 
-		    if ((bool)Minz_Request::param("merc_".$f->id(), 0) ) {
+		    if (Minz_Request::paramBoolean("merc_".$f->id()) ) {
 			    $mstore[$f->id()] = true;
 		    }
 
-		    if ((bool)Minz_Request::param("ff_".$f->id(), 0) ) {
+		    if (Minz_Request::paramBoolean("ff_".$f->id()) ) {
 			    $fstore[$f->id()] = true;
 		    }
 	    }
 
 	    foreach ( $this->cats as $c ) {
 	    	foreach ( array_keys($cstore) as $v ) {
-		    if ((bool)Minz_Request::param($v . "_cat_".$c->id(), 0)){
+		    if (Minz_Request::paramBoolean($v . "_cat_".$c->id())){
 			    $cstore[$v][$c->id()] = true;
 		
 		    }
@@ -197,9 +197,9 @@ class ReadableExtension extends Minz_Extension {
 	    FreshRSS_Context::$user_conf->read_ext_cat = (string)json_encode($cstore);
 
 
-	    FreshRSS_Context::$user_conf->read_ext_merc_host = (string)Minz_Request::param('read_mercury_host');
-	    FreshRSS_Context::$user_conf->read_ext_read_host = (string)Minz_Request::param('read_readability_host');
-	    FreshRSS_Context::$user_conf->read_ext_five_host = (string)Minz_Request::param('read_fivefilters_host');
+	    FreshRSS_Context::$user_conf->read_ext_merc_host = Minz_Request::paramString('read_mercury_host');
+	    FreshRSS_Context::$user_conf->read_ext_read_host = Minz_Request::paramString('read_readability_host');
+	    FreshRSS_Context::$user_conf->read_ext_five_host = Minz_Request::paramString('read_fivefilters_host');
 	
 	    FreshRSS_Context::$user_conf->save();
 	}
